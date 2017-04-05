@@ -17,6 +17,7 @@ def load_from_dir(local_path):
 
 load_from_dir(debug_path)
 print('no. of images: ', len(samples))
+print('try')
 
 for line in samples:
     name = debug_path + 'IMG/' + line[0].split('/')[-1]
