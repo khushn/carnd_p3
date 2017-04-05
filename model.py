@@ -122,8 +122,7 @@ validation_generator = generator(validation_samples, batch_size=32)
 #Now the model
 from keras.models import Sequential
 from keras.models import load_model
-from keras.layers import Flatten, Dense, Lambda, Cropping2D
-
+from keras.layers import Flatten, Dense, Lambda, Cropping2D, Conv2D, MaxPooling2D
 def createBasicModel():
     model = Sequential()
     model.add(Lambda(lambda x: x/255.0 - 0.5, input_shape = (160, 320, 3)))
@@ -134,12 +133,53 @@ def createBasicModel():
     return model
 
 def createLeNetModel():
-    print('LeNet Model not yet coded')
-    return Nil
+    model = Sequential()
+    model.add(Lambda(lambda x: x/255.0 - 0.5, input_shape = (160, 320, 3)))
+
+    #output of crop 90x320
+    model.add(Cropping2D(cropping=((50,20), (0,0))))
+    
+    #first cnn layers
+    #output of this layer 88x318x6
+    model.add(Conv2D(
+        # new versions of keras have better way of giving input means 6, (3,3)
+        # the keras documentation is for the latest version (slightly diff from here)
+        6, 3, 3,
+        border_mode='valid',
+        activation='relu',
+))
+
+    #output 44x159x6
+    model.add(MaxPooling2D())
+
+    #2nd conv layer 
+    #output 40x155x16 
+    model.add(Conv2D(
+        16, 5, 5,
+        border_mode='valid',
+        activation='relu',
+))
+
+    #output 20x77x16
+    model.add(MaxPooling2D())
+    
+    # output 24640 
+    model.add(Flatten())
+    
+    # fc 1 output 300
+    # this will need huge(st) no. of params
+    model.add(Dense(300))
+
+    #bringing it down to single output
+    model.add(Dense(1))
+
+    model.compile(loss='mse', optimizer='adam')
+    return model
+
 
 def createNvidiaModel():
     print('Nvidia Model not yet coded')
-    return Nil
+    return None
 
 
 def load_model_from_file():
@@ -150,12 +190,16 @@ def load_model_from_file():
         except:
             print('Error in loading model from file:', model_file)
 
+    my_model=None
     if args.model == 1:
-        return createBasicModel()
+        my_model = createBasicModel()
     if args.model == 2:
-        return createLeNetModel()
+        my_model = createLeNetModel()
     if args.model == 3:
-        return createNvidiaModel()
+        my_model = createNvidiaModel()
+    
+    my_model.summary()
+    return my_model
 
 model = load_model_from_file()
 #model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=7)
