@@ -181,15 +181,16 @@ def createLeNetModel():
 
 def createNvidiaModel():
     model = Sequential()
-    model.add(Lambda(lambda x: x/255.0 - 0.5, input_shape = (160, 320, 3)))
-
-    #output of crop 90x320
-    model.add(Cropping2D(cropping=((50,20), (0,0))))
-    
     #resize images in a lambda layer 
     #courtesy http://stackoverflow.com/questions/42260265/resizing-an-input-image-in-a-keras-lambda-layer
-    model.add(Lambda(lambda image: ktf.image.resize_images(image, (66, 235))))
+    model.add(Lambda(lambda image: ktf.image.resize_images(image, (118, 235)),
+                     input_shape=(160, 320, 3)))
 
+    model.add(Lambda(lambda x: x/255.0 - 0.5))
+
+    #output of crop 90x320
+    model.add(Cropping2D(cropping=((37,15), (0,0))))
+    
 
     #1st cnn layer
     #output of this layer 43x158x24
