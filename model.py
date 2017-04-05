@@ -138,8 +138,11 @@ def createLeNetModel():
     model = Sequential()
     model.add(Lambda(lambda x: x/255.0 - 0.5, input_shape = (160, 320, 3)))
 
+    #Since resize is problematic, using MaxPooling2D should give same effect
+    model.add(MaxPooling2D())
+
     #output of crop 90x320
-    model.add(Cropping2D(cropping=((50,20), (0,0))))
+    model.add(Cropping2D(cropping=((25,10), (0,0))))
     
     #first cnn layers
     #output of this layer 88x318x6
@@ -163,7 +166,7 @@ def createLeNetModel():
 ))
 
     #output 20x77x16
-    #model.add(MaxPooling2D())
+    model.add(MaxPooling2D())
     
     # output 24640 
     model.add(Flatten())
