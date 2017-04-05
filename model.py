@@ -123,7 +123,7 @@ validation_generator = generator(validation_samples, batch_size=32)
 from keras.models import Sequential
 from keras.models import load_model
 from keras.layers import Flatten, Dense, Lambda, Cropping2D, Conv2D, MaxPooling2D
-from keras.backend import tf as ktf
+#from keras import backend as ktf
 
 def createBasicModel():
     model = Sequential()
@@ -183,13 +183,16 @@ def createNvidiaModel():
     model = Sequential()
     #resize images in a lambda layer 
     #courtesy http://stackoverflow.com/questions/42260265/resizing-an-input-image-in-a-keras-lambda-layer
-    model.add(Lambda(lambda image: ktf.image.resize_images(image, (118, 235)),
-                     input_shape=(160, 320, 3)))
+    #model.add(Lambda(lambda img: ktf.resize_images(img, 160/160, 320/320, 'tf'),
+    #                 input_shape=(160, 320, 3)))
 
-    model.add(Lambda(lambda x: x/255.0 - 0.5))
+    model.add(Lambda(lambda x: x/255.0 - 0.5, input_shape=(160, 320, 3)))
+
+    #Since resize is problematic, using MaxPooling2D should give same effect
+    model.add(MaxPooling2D())
 
     #output of crop 90x320
-    model.add(Cropping2D(cropping=((37,15), (0,0))))
+    model.add(Cropping2D(cropping=((25,10), (0,0))))
     
 
     #1st cnn layer
@@ -204,7 +207,7 @@ def createNvidiaModel():
     #output of this layer 20x77x36
     model.add(Conv2D(
         36, 5, 5, 
-        subsample=(2,2),
+        #subsample=(2,2),
         border_mode='valid'
 ))
 
