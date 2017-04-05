@@ -224,19 +224,22 @@ def createNvidiaModel():
 
     #6th cnn layer
     #output of this layer 2x31x64
-    model.add(Conv2D(
-        64, 3, 3, 
-        border_mode='valid'
-))
+    #model.add(Conv2D(
+    #    64, 3, 3, 
+   #     border_mode='valid'
+#))
 
     # output: 3968
     model.add(Flatten())
     
-    #bringing it down to output: 200
-    model.add(Dense(200))
+    #fc1 
+    model.add(Dense(100))
 
-    #bringing it down to output:75 
-    model.add(Dense(75))
+    #fc2 
+    model.add(Dense(50))
+
+    #fc3 
+    model.add(Dense(10))
 
     #single output (which maps to steering o/p)
     model.add(Dense(1))
