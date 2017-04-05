@@ -150,7 +150,7 @@ def createLeNetModel():
 ))
 
     #output 44x159x6
-    model.add(MaxPooling2D())
+    #model.add(MaxPooling2D())
 
     #2nd conv layer 
     #output 40x155x16 
@@ -161,7 +161,7 @@ def createLeNetModel():
 ))
 
     #output 20x77x16
-    model.add(MaxPooling2D())
+    #model.add(MaxPooling2D())
     
     # output 24640 
     model.add(Flatten())
