@@ -178,8 +178,71 @@ def createLeNetModel():
 
 
 def createNvidiaModel():
-    print('Nvidia Model not yet coded')
-    return None
+    model = Sequential()
+    model.add(Lambda(lambda x: x/255.0 - 0.5, input_shape = (160, 320, 3)))
+
+    #output of crop 90x320
+    model.add(Cropping2D(cropping=((50,20), (0,0))))
+    
+    #1st cnn layer
+    #output of this layer 43x158x24
+    model.add(Conv2D(
+        24, 5, 5, 
+        subsample=(2,2),
+        border_mode='valid'
+))
+
+    #2nd cnn layer
+    #output of this layer 20x77x36
+    model.add(Conv2D(
+        36, 5, 5, 
+        subsample=(2,2),
+        border_mode='valid'
+))
+
+    #3rd cnn layer
+    #output of this layer 8x37x48
+    model.add(Conv2D(
+        48, 5, 5, 
+        subsample=(2,2),
+        border_mode='valid'
+))
+
+    #4th cnn layer
+    #output of this layer 6x35x64
+    model.add(Conv2D(
+        64, 3, 3, 
+        border_mode='valid'
+))
+
+    #5th cnn layer
+    #output of this layer 4x33x64
+    model.add(Conv2D(
+        64, 3, 3, 
+        border_mode='valid'
+))
+
+    #6th cnn layer
+    #output of this layer 2x31x64
+    model.add(Conv2D(
+        64, 3, 3, 
+        border_mode='valid'
+))
+
+    # output: 3968
+    model.add(Flatten())
+    
+    #bringing it down to output: 200
+    model.add(Dense(200))
+
+    #bringing it down to output:75 
+    model.add(Dense(75))
+
+    #single output (which maps to steering o/p)
+    model.add(Dense(1))
+
+    model.compile(loss='mse', optimizer='adam')
+    return model
 
 
 def load_model_from_file():
