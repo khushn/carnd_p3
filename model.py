@@ -202,7 +202,7 @@ def createNvidiaModel():
     #output of this layer 43x158x24
     model.add(Conv2D(
         24, 5, 5, 
-        subsample=(2,2),
+        #subsample=(2,2),
         border_mode='valid'
 ))
 
@@ -210,7 +210,7 @@ def createNvidiaModel():
     #output of this layer 20x77x36
     model.add(Conv2D(
         36, 5, 5, 
-        #subsample=(2,2),
+        subsample=(2,2),
         border_mode='valid'
 ))
 
