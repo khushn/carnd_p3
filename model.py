@@ -208,7 +208,7 @@ def createNvidiaModel():
     model.add(Conv2D(
         24, 5, 5, 
         subsample=(2,2),
-        activation='relu',
+        #activation='relu',
         border_mode='valid'
 ))
 
@@ -217,7 +217,7 @@ def createNvidiaModel():
     model.add(Conv2D(
         36, 5, 5, 
         subsample=(2,2),
-        activation='relu',
+        #activation='relu',
         border_mode='valid'
 ))
 
@@ -226,7 +226,7 @@ def createNvidiaModel():
     model.add(Conv2D(
         48, 5, 5, 
         subsample=(2,2),
-        activation='relu',
+        #activation='relu',
         border_mode='valid'
 ))
 
@@ -234,7 +234,7 @@ def createNvidiaModel():
     #output of this layer 6x35x64
     model.add(Conv2D(
         64, 3, 3, 
-        activation='relu',
+        #activation='relu',
         border_mode='valid'
 ))
 
@@ -242,7 +242,7 @@ def createNvidiaModel():
     #output of this layer 4x33x64
     model.add(Conv2D(
         64, 3, 3, 
-        activation='relu',
+        #activation='relu',
         border_mode='valid'
 ))
 
