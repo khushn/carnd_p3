@@ -182,6 +182,10 @@ def createLeNetModel():
     return model
 
 
+def resize(img):
+    import tensorflow as tf
+    return tf.image.resize_images(img, (66, 235))
+
 def createNvidiaModel():
     model = Sequential()
     #resize images in a lambda layer 
@@ -189,20 +193,22 @@ def createNvidiaModel():
     #model.add(Lambda(lambda img: ktf.resize_images(img, 160/160, 320/320, 'tf'),
     #                 input_shape=(160, 320, 3)))
 
-    model.add(Lambda(lambda x: x/255.0 - 0.5, input_shape=(160, 320, 3)))
-
-    #Since resize is problematic, using MaxPooling2D should give same effect
-    model.add(MaxPooling2D())
 
     #output of crop 90x320
-    model.add(Cropping2D(cropping=((25,10), (0,0))))
+    model.add(Cropping2D(cropping=((50,20), (0,0)), input_shape=(160, 320, 3)))
     
+    #resize images
+    model.add(Lambda(resize))
+    
+    #normalize
+    model.add(Lambda(lambda x: x/255.0 - 0.5))
 
     #1st cnn layer
     #output of this layer 43x158x24
     model.add(Conv2D(
         24, 5, 5, 
-        #subsample=(2,2),
+        subsample=(2,2),
+        activation='relu',
         border_mode='valid'
 ))
 
@@ -211,6 +217,7 @@ def createNvidiaModel():
     model.add(Conv2D(
         36, 5, 5, 
         subsample=(2,2),
+        activation='relu',
         border_mode='valid'
 ))
 
@@ -219,6 +226,7 @@ def createNvidiaModel():
     model.add(Conv2D(
         48, 5, 5, 
         subsample=(2,2),
+        activation='relu',
         border_mode='valid'
 ))
 
@@ -226,6 +234,7 @@ def createNvidiaModel():
     #output of this layer 6x35x64
     model.add(Conv2D(
         64, 3, 3, 
+        activation='relu',
         border_mode='valid'
 ))
 
@@ -233,15 +242,9 @@ def createNvidiaModel():
     #output of this layer 4x33x64
     model.add(Conv2D(
         64, 3, 3, 
+        activation='relu',
         border_mode='valid'
 ))
-
-    #6th cnn layer
-    #output of this layer 2x31x64
-    #model.add(Conv2D(
-    #    64, 3, 3, 
-   #     border_mode='valid'
-#))
 
     # output: 3968
     model.add(Flatten())
