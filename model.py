@@ -183,6 +183,8 @@ def createLeNetModel():
 
 
 def resize(img):
+    #We must import it inside the function
+    #because its used from a lambda layer
     import tensorflow as tf
     return tf.image.resize_images(img, (66, 235))
 
