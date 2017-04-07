@@ -92,7 +92,7 @@ def get_image_and_meas(image_path, measurement):
         angle = -angle
     return image, angle
 
-def generator(samples, batch_size=32):
+def generator(samples, batch_size=128):
     num_samples = len(samples)
     while 1: # Loop forever so the generator never terminates
         sklearn.utils.shuffle(samples)
