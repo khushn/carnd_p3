@@ -101,7 +101,7 @@ load_all_sub_dirs(training_dir)
 print('no. of images: ', len(samples))
 
 from sklearn.model_selection import train_test_split
-train_samples, validation_samples = train_test_split(samples, test_size=0.2)
+train_samples, validation_samples = train_test_split(samples, test_size=0.1)
 print('training samples: ', len(train_samples))
 print('validation samples: ', len(validation_samples))
 
