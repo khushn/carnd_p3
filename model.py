@@ -79,6 +79,10 @@ def load_all_sub_dirs(tdir):
     for adir in onlydirs:
         #print(tdir + adir)
         load_from_dir(tdir + adir + "/")
+        #recursively call itself for each dir (in case we club t1/t2)
+        if tdir[-1] != '/':
+            tdir += '/'
+        load_all_sub_dirs(tdir+adir)
 
 
 def load_from_dir(local_path):
