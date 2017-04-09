@@ -17,8 +17,8 @@ parser.add_argument(
     'flip',
     type=int,
     nargs='?',
-    default=0,
-    help='1(flip image to augment data), 0(default, normal image)'
+    default=1,
+    help='1(flip image to augment data), 1(default, also flip images)'
 )
 parser.add_argument(
     'reuse',
@@ -45,9 +45,9 @@ training_dir=args.training_dir
 if training_dir[-1] != '/':
     training_dir += '/'
 
-flip=False
-if args.flip == 1:
-    flip=True
+flip=True
+if args.flip == 0:
+    flip=False
     
 print('------------------------------------')
 print('training data: ', training_dir, '\nmodel file: ', model_file, '\nreuse model file(if present): ', reuse, '\nflip images: ', flip)
@@ -63,15 +63,37 @@ if proceed != 'y':
 import csv
 import cv2
 import numpy as np
+from os import listdir
+from os.path import isdir, join
+import glob
+
 
 samples=[]
-def load_from_dir(local_path):
-    with open(local_path + 'driving_log.csv') as csvfile:
-        reader = csv.reader(csvfile)
-        for line in reader:
-            samples.append(line)
 
-load_from_dir(training_dir)
+#reads a high level dir e.g. one for each track
+#which has various folers within
+def load_all_sub_dirs(tdir):
+    load_from_dir(tdir)
+    onlydirs = [f for f in listdir(tdir) if isdir(join(tdir, f))]
+    #print(onlydirs)
+    for adir in onlydirs:
+        #print(tdir + adir)
+        load_from_dir(tdir + adir + "/")
+
+
+def load_from_dir(local_path):
+    csv_files = glob.glob(local_path+"driving_log.csv")
+    if len(csv_files)>0:
+        csvn = csv_files[0]
+        print("loading: ", csvn)
+        with open(csvn) as csvfile:
+            reader = csv.reader(csvfile)
+            for line in reader:
+                # appending the local path for relative img path location
+                line.append(local_path)
+                samples.append(line)
+
+load_all_sub_dirs(training_dir)
 print('no. of images: ', len(samples))
 
 from sklearn.model_selection import train_test_split
@@ -79,17 +101,14 @@ train_samples, validation_samples = train_test_split(samples, test_size=0.2)
 print('training samples: ', len(train_samples))
 print('validation samples: ', len(validation_samples))
 
-aws_gpu_path = training_dir + 'IMG/'
 
 import sklearn
 
-def get_image_and_meas(image_path, measurement):
-    name = aws_gpu_path + image_path.split('/')[-1]
-    image = cv2.imread(name)
+def get_image_and_meas(local_path, image_path, measurement):
+    img_fname = local_path +"IMG/" + image_path.split('/')[-1]
+    #print(img_fname)
+    image = cv2.imread(img_fname)
     angle = measurement
-    if flip:
-        image = np.fliplr(image)
-        angle = -angle
     return image, angle
 
 def generator(samples, batch_size=128):
@@ -104,11 +123,17 @@ def generator(samples, batch_size=128):
             correction = 0.2
             for batch_sample in batch_samples:
                 measurement = float(batch_sample[3])
-                center_image, center_angle = get_image_and_meas(batch_sample[0], measurement)
-                left_image, left_angle = get_image_and_meas(batch_sample[1], measurement + correction)
-                right_image, right_angle = get_image_and_meas(batch_sample[2], measurement - correction)
+                local_path=batch_sample[-1]
+                center_image, center_angle = get_image_and_meas(local_path, batch_sample[0], measurement)
+                left_image, left_angle = get_image_and_meas(local_path, batch_sample[1], measurement + correction)
+                right_image, right_angle = get_image_and_meas(local_path, batch_sample[2], measurement - correction)
                 images.extend((center_image, left_image, right_image))
                 angles.extend((center_angle, left_angle, right_angle))
+                if flip:
+                    images.extend((np.fliplr(center_image), 
+                                   np.fliplr(left_image), 
+                                   np.fliplr(right_image)))
+                    angles.extend((-center_angle, -left_angle, -right_angle))
 
             # trim image to only see section with road
             X_train = np.array(images)
@@ -287,8 +312,14 @@ def load_model_from_file():
     return my_model
 
 model = load_model_from_file()
+# 3(left, right, center) x 2(normal and flipped image)
+image_multiple=3
+if flip:
+    image_multiple*=2
+print('image_multiple:', image_multiple)
+
 #model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=7)
 model.fit_generator(train_generator, samples_per_epoch= \
-            len(train_samples)*3, validation_data=validation_generator, \
-            nb_val_samples=len(validation_samples)*3, nb_epoch=3)
+            len(train_samples)*image_multiple, validation_data=validation_generator, \
+            nb_val_samples=len(validation_samples)*image_multiple, nb_epoch=3)
 model.save(model_file)
