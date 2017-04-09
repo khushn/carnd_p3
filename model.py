@@ -85,6 +85,13 @@ def load_all_sub_dirs(tdir):
         load_all_sub_dirs(tdir+adir)
 
 
+def append_line(local_path, img_path, measurement, flipped=False):
+     entry=[None]*3
+     entry[0]= local_path +"IMG/" + img_path.split('/')[-1]
+     entry[1]=measurement
+     entry[2]=flipped
+     samples.append(entry)
+
 def load_from_dir(local_path):
     csv_files = glob.glob(local_path+"driving_log.csv")
     if len(csv_files)>0:
@@ -94,8 +101,22 @@ def load_from_dir(local_path):
             reader = csv.reader(csvfile)
             for line in reader:
                 # appending the local path for relative img path location
-                line.append(local_path)
-                samples.append(line)
+                correction = 0.2
+                entry=[None]*3
+                measurement=float(line[3])
+                #center line
+                append_line(local_path, line[0], measurement)
+                #left line
+                append_line(local_path, line[1], measurement + correction)
+                #right line
+                append_line(local_path, line[2], measurement - correction)
+                if flip:
+                    #center line
+                    append_line(local_path, line[0], -measurement, True)
+                    #left line
+                    append_line(local_path, line[1], -(measurement + correction), True)
+                    #right line
+                    append_line(local_path, line[2], -(measurement - correction), True)
 
 load_all_sub_dirs(training_dir)
 print('no. of images: ', len(samples))
@@ -109,13 +130,12 @@ print('validation samples: ', len(validation_samples))
 import sklearn
 
 def get_image_and_meas(local_path, image_path, measurement):
-    img_fname = local_path +"IMG/" + image_path.split('/')[-1]
     #print(img_fname)
     image = cv2.imread(img_fname)
     angle = measurement
     return image, angle
 
-def generator(samples, batch_size=128):
+def generator(samples, batch_size=256):
     num_samples = len(samples)
     while 1: # Loop forever so the generator never terminates
         sklearn.utils.shuffle(samples)
@@ -124,20 +144,12 @@ def generator(samples, batch_size=128):
 
             images = []
             angles = []
-            correction = 0.2
             for batch_sample in batch_samples:
-                measurement = float(batch_sample[3])
-                local_path=batch_sample[-1]
-                center_image, center_angle = get_image_and_meas(local_path, batch_sample[0], measurement)
-                left_image, left_angle = get_image_and_meas(local_path, batch_sample[1], measurement + correction)
-                right_image, right_angle = get_image_and_meas(local_path, batch_sample[2], measurement - correction)
-                images.extend((center_image, left_image, right_image))
-                angles.extend((center_angle, left_angle, right_angle))
-                if flip:
-                    images.extend((np.fliplr(center_image), 
-                                   np.fliplr(left_image), 
-                                   np.fliplr(right_image)))
-                    angles.extend((-center_angle, -left_angle, -right_angle))
+                img = cv2.imread(batch_sample[0])
+                if batch_sample[2]:
+                    img=np.fliplr(img)
+                images.append(img)
+                angles.append(batch_sample[1])
 
             # trim image to only see section with road
             X_train = np.array(images)
@@ -316,14 +328,8 @@ def load_model_from_file():
     return my_model
 
 model = load_model_from_file()
-# 3(left, right, center) x 2(normal and flipped image)
-image_multiple=3
-if flip:
-    image_multiple*=2
-print('image_multiple:', image_multiple)
-
 #model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=7)
 model.fit_generator(train_generator, samples_per_epoch= \
-            len(train_samples)*image_multiple, validation_data=validation_generator, \
-            nb_val_samples=len(validation_samples)*image_multiple, nb_epoch=5)
+            len(train_samples), validation_data=validation_generator, \
+            nb_val_samples=len(validation_samples), nb_epoch=5)
 model.save(model_file)
