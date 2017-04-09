@@ -325,5 +325,5 @@ print('image_multiple:', image_multiple)
 #model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=7)
 model.fit_generator(train_generator, samples_per_epoch= \
             len(train_samples)*image_multiple, validation_data=validation_generator, \
-            nb_val_samples=len(validation_samples)*image_multiple, nb_epoch=7)
+            nb_val_samples=len(validation_samples)*image_multiple, nb_epoch=5)
 model.save(model_file)
