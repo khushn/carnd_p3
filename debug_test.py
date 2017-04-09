@@ -1,11 +1,23 @@
-import cv2
+import argparse
+
+parser = argparse.ArgumentParser(description='Model debug')
+parser.add_argument(
+    'model',
+    type=str,
+    help='The model file name e.g. lenet.h5'
+)
+
+args = parser.parse_args()
+
 import csv
+import cv2
 import numpy as np
 from keras.models import Sequential
 from keras.models import load_model
 from keras.layers import Flatten, Dense, Lambda, Cropping2D
 
-model = load_model('basic.h5')
+model = load_model(args.model)
+
 
 debug_path='./recordings/debug/'
 samples=[]
