@@ -19,7 +19,7 @@ The python code for the CNN Model and its training:
 
 The recorded video of the results (vehicle driving autonomously around the track) using Nvidia CNN (See writeup for details):
 ---
-[video_nvidia.mp4](/video_nvidia.mp4)
+[video.mp4](/video.mp4)
 
 The Keras built model(Nvidia), which gave the best results:
 ---
@@ -28,6 +28,7 @@ The Keras built model(Nvidia), which gave the best results:
 The recorded video of the results (vehicle driving autonomously around the track) using LeNet CNN (See writeup for details):
 ---
 [video_lenet.mp4](/video_lenet.mp4)
+(This is included, here, as it also works reasonably well)
 
 The Keras built model(LeNet), which gave the best results: 
 [LeNet model h5 file](/lenet.h5)
