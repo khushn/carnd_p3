@@ -42,7 +42,15 @@ Project rubric:
 https://review.udacity.com/#!/rubrics/432/view
 
 
-## Appendix: Udacity original documentation left here, for future use of this project
+Thanks:
+---
+Thanks to my family Iram, Manzood and Minhal, for driving in the two tracks for me. 
+[My gaming skills are below par. I tried, and it was quite bad :)]
+
+
+
+## Appendix 
+Udacity original documentation below, for future use of this project
 
 ### Dependencies
 This lab requires:
