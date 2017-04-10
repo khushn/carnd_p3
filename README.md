@@ -1,41 +1,47 @@
-# Behaviorial Cloning Project
+## Behaviorial Cloning Project
 
 [![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
 
 Overview
 ---
-This repository contains starting files for the Behavioral Cloning Project.
 
-In this project, you will use what you've learned about deep neural networks and convolutional neural networks to clone driving behavior. You will train, validate and test a model using Keras. The model will output a steering angle to an autonomous vehicle.
+In this project, I use my learnings about deep neural networks and convolutional neural networks to clone driving behavior. I train, validate and test a model using Keras. The model outputs a steering angle to an autonomous vehicle.
 
-We have provided a simulator where you can steer a car around a track for data collection. You'll use image data and steering angles to train a neural network and then use this model to drive the car autonomously around the track.
+I use a Udacity provided simulator to steer a car around a track for data collection. Then I use image data and steering angles to train a neural network and then use this model to drive the car autonomously around the track.
 
-We also want you to create a detailed writeup of the project. Check out the [writeup template](https://github.com/udacity/CarND-Behavioral-Cloning-P3/blob/master/writeup_template.md) for this project and use it as a starting point for creating your own writeup. The writeup can be either a markdown file or a pdf document.
-
-To meet specifications, the project will require submitting five files: 
-* model.py (script used to create and train the model)
-* drive.py (script to drive the car - feel free to modify this file)
-* model.h5 (a trained Keras model)
-* a report writeup file (either markdown or pdf)
-* video.mp4 (a video recording of your vehicle driving autonomously around the track for at least one full lap)
-
-This README file describes how to output the video in the "Details About Files In This Directory" section.
-
-Creating a Great Writeup
+The detailed project writeup is at:
 ---
-A great writeup should include the [rubric points](https://review.udacity.com/#!/rubrics/432/view) as well as your description of how you addressed each point.  You should include a detailed description of the code used (with line-number references and code snippets where necessary), and links to other supporting documents or external references.  You should include images in your writeup to demonstrate how your code works with examples.  
+[writeup template](https://github.com/udacity/CarND-Behavioral-Cloning-P3/blob/master/writeup_template.md)
 
-All that said, please be concise!  We're not looking for you to write a book here, just a brief description of how you passed each rubric point, and references to the relevant code :). 
-
-You're not required to use markdown for your writeup.  If you use another method please just submit a pdf of your writeup.
-
-The Project
+The python code for the CNN Model and its training:
 ---
-The goals / steps of this project are the following:
-* Use the simulator to collect data of good driving behavior 
-* Design, train and validate a model that predicts a steering angle from image data
-* Use the model to drive the vehicle autonomously around the first track in the simulator. The vehicle should remain on the road for an entire loop around the track.
-* Summarize the results with a written report
+[model.py](/khushn/carnd_p3/model.py)
+
+The recorded video of the results (vehicle driving autonomously around the track) using Nvidia CNN (See writeup for details):
+---
+[video_nvidia.mp4](/khushn/carnd_p3/video_nvidia.mp4)
+
+The Keras built model(Nvidia), which gave the best results:
+---
+[Nvidia model h5 file](/khushn/carnd_p3/nvidia.h5)
+
+The recorded video of the results (vehicle driving autonomously around the track) using LeNet CNN (See writeup for details):
+---
+[video_lenet.mp4](/khushn/carnd_p3/video_lenet.mp4)
+
+The Keras built model(LeNet), which gave the best results: 
+[LeNet model h5 file](/khushn/carnd_p3/lenet.h5)
+
+The drive.py file used to test drive the model:
+---
+[drive.py](/khushn/carnd_p3/drive.py)
+
+Project rubric:
+---
+https://review.udacity.com/#!/rubrics/432/view
+
+
+## Appendix: Udacity original documentation left here, for future use of this project
 
 ### Dependencies
 This lab requires:
