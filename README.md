@@ -11,30 +11,30 @@ I use a Udacity provided simulator to steer a car around a track for data collec
 
 The detailed project writeup is at:
 ---
-[writeup template](https://github.com/udacity/CarND-Behavioral-Cloning-P3/blob/master/writeup_template.md)
+[writeup](/writeup.pdf)
 
 The python code for the CNN Model and its training:
 ---
-[model.py](/khushn/carnd_p3/model.py)
+[model.py](/model.py)
 
 The recorded video of the results (vehicle driving autonomously around the track) using Nvidia CNN (See writeup for details):
 ---
-[video_nvidia.mp4](/khushn/carnd_p3/video_nvidia.mp4)
+[video_nvidia.mp4](/video_nvidia.mp4)
 
 The Keras built model(Nvidia), which gave the best results:
 ---
-[Nvidia model h5 file](/khushn/carnd_p3/nvidia.h5)
+[Nvidia model h5 file](/nvidia.h5)
 
 The recorded video of the results (vehicle driving autonomously around the track) using LeNet CNN (See writeup for details):
 ---
-[video_lenet.mp4](/khushn/carnd_p3/video_lenet.mp4)
+[video_lenet.mp4](/video_lenet.mp4)
 
 The Keras built model(LeNet), which gave the best results: 
-[LeNet model h5 file](/khushn/carnd_p3/lenet.h5)
+[LeNet model h5 file](/lenet.h5)
 
 The drive.py file used to test drive the model:
 ---
-[drive.py](/khushn/carnd_p3/drive.py)
+[drive.py](/drive.py)
 
 Project rubric:
 ---
