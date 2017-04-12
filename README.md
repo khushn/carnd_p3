@@ -44,7 +44,7 @@ https://review.udacity.com/#!/rubrics/432/view
 
 Thanks to the drivers:
 ---
-Thanks to my family Iram, Manzood and Minhal, for driving in the two tracks for me. 
+Thanks to my wife and my kids(Hey M & M!), for being enthusiastic drivers in the two tracks for me. 
 [My gaming skills are below par. I tried, and it was quite bad :)]
 
 
