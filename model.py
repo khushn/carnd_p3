@@ -70,7 +70,7 @@ import glob
 
 samples=[]
 
-min_thres=.0002
+min_thres=.1
 zero_drop_prob=0.9
 
 #reads a high level dir e.g. one for each track
@@ -133,8 +133,23 @@ print('no. of images: ', len(samples))
 
 from sklearn.model_selection import train_test_split
 train_samples, validation_samples = train_test_split(samples, test_size=0.1)
-print('training samples: ', len(train_samples))
-print('validation samples: ', len(validation_samples))
+print('training samples: ', len(train_samples)*2)
+print('validation samples: ', len(validation_samples)*2)
+
+
+#This idea and code of lateral tranformation of an image 
+# to get more data is inspired and copied from
+#https://chatbotslife.com/using-augmentation-to-mimic-human-driving-496b569760a9
+def trans_image(image,steer,trans_range):
+    # Translation
+    tr_x = trans_range*np.random.uniform()-trans_range/2
+    steer_ang = steer + tr_x/trans_range*2*.2
+    tr_y = 40*np.random.uniform()-40/2
+    #tr_y = 0
+    Trans_M = np.float32([[1,0,tr_x],[0,1,tr_y]])
+    image_tr = cv2.warpAffine(image,Trans_M,(320,160))
+    
+    return image_tr,steer_ang
 
 
 import sklearn
@@ -159,7 +174,12 @@ def generator(samples, batch_size=256):
                 if batch_sample[2]:
                     img=np.fliplr(img)
                 images.append(img)
-                angles.append(batch_sample[1])
+                meas = batch_sample[1]
+                angles.append(meas)
+                #transform image (left/right shift) for more data
+                img_trans, y_trans = trans_image(img, meas, 100)
+                images.append(img_trans)
+                angles.append(y_trans)
 
             # trim image to only see section with road
             X_train = np.array(images)
