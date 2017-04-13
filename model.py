@@ -360,6 +360,6 @@ def load_model_from_file():
 model = load_model_from_file()
 #model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=7)
 model.fit_generator(train_generator, samples_per_epoch= \
-            len(train_samples), validation_data=validation_generator, \
-            nb_val_samples=len(validation_samples), nb_epoch=5)
+            len(train_samples)*2, validation_data=validation_generator, \
+            nb_val_samples=len(validation_samples)*2, nb_epoch=5)
 model.save(model_file)
