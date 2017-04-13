@@ -133,8 +133,8 @@ print('no. of images: ', len(samples))
 
 from sklearn.model_selection import train_test_split
 train_samples, validation_samples = train_test_split(samples, test_size=0.1)
-print('training samples: ', len(train_samples)*2)
-print('validation samples: ', len(validation_samples)*2)
+print('training samples: ', len(train_samples))
+print('validation samples: ', len(validation_samples))
 
 
 #This idea and code of lateral tranformation of an image 
@@ -173,11 +173,11 @@ def generator(samples, batch_size=256):
                 img = cv2.imread(batch_sample[0])
                 if batch_sample[2]:
                     img=np.fliplr(img)
-                images.append(img)
+                #images.append(img)
                 meas = batch_sample[1]
-                angles.append(meas)
+                #angles.append(meas)
                 #transform image (left/right shift) for more data
-                img_trans, y_trans = trans_image(img, meas, 100)
+                img_trans, y_trans = trans_image(img, meas, 140)
                 images.append(img_trans)
                 angles.append(y_trans)
 
@@ -360,6 +360,6 @@ def load_model_from_file():
 model = load_model_from_file()
 #model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=7)
 model.fit_generator(train_generator, samples_per_epoch= \
-            len(train_samples)*2, validation_data=validation_generator, \
-            nb_val_samples=len(validation_samples)*2, nb_epoch=5)
+            len(train_samples), validation_data=validation_generator, \
+            nb_val_samples=len(validation_samples), nb_epoch=5)
 model.save(model_file)
