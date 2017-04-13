@@ -70,7 +70,10 @@ import glob
 
 samples=[]
 
-min_thres=.1
+#track 2 we need to keep a value of .1
+#but for track 1 it needs to be reduced to say .002
+min_t1_thres=.002
+min_t2_thres=.1
 zero_drop_prob=0.9
 
 #reads a high level dir e.g. one for each track
@@ -109,7 +112,7 @@ def load_from_dir(local_path):
                 measurement=float(line[3])
                 
                 # We drop near zero steering angle with a high probablity
-                if abs(measurement)<=min_thres:
+                if abs(measurement)<=min_t1_thres:
                     if np.random.uniform() < zero_drop_prob:
                         continue
 
@@ -177,7 +180,9 @@ def generator(samples, batch_size=256):
                 meas = batch_sample[1]
                 #angles.append(meas)
                 #transform image (left/right shift) for more data
-                img_trans, y_trans = trans_image(img, meas, 140)
+                track1_pixels=50
+                track2_pixels=140
+                img_trans, y_trans = trans_image(img, meas, track1_pixels)
                 images.append(img_trans)
                 angles.append(y_trans)
 
