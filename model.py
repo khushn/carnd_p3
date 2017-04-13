@@ -70,6 +70,9 @@ import glob
 
 samples=[]
 
+min_thres=.0002
+zero_drop_prob=0.9
+
 #reads a high level dir e.g. one for each track
 #which has various folers within
 def load_all_sub_dirs(tdir):
@@ -104,6 +107,13 @@ def load_from_dir(local_path):
                 correction = 0.2
                 entry=[None]*3
                 measurement=float(line[3])
+                
+                # We drop near zero steering angle with a high probablity
+                if abs(measurement)<=min_thres:
+                    if np.random.uniform() < zero_drop_prob:
+                        continue
+
+
                 #center line
                 append_line(local_path, line[0], measurement)
                 #left line
