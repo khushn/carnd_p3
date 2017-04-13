@@ -19,7 +19,14 @@ The python code for the CNN Model and its training:
 
 The recorded video of the results (vehicle driving autonomously around the track) using Nvidia CNN (See writeup for details):
 ---
+
+Track 1 autnomous driving
+----
 [video.mp4](/video.mp4)
+
+Track 2 autonmous driving
+----
+[track2.mp4](/track2.mp4)
 
 The Keras built model(Nvidia), which gave the best results:
 ---
